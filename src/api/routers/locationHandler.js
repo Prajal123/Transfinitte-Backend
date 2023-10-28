@@ -67,6 +67,8 @@ locationRouter.get("/getdetails", authJWT, async (req, res) => {
 locationRouter.get("/detectCollision", authJWT,async (req, res) => {
   try {
 
+    const { toEmail } = req.body;
+
     const userId = req.jwt_payload.id;
     
     const user = await Users.findById(userId);
@@ -127,7 +129,7 @@ locationRouter.get("/detectCollision", authJWT,async (req, res) => {
     
     var mailOptions = {
       from: process.env.EMAIL ,
-      to: 'singhalprajalkumar@gmail.com',
+      to: toEmail,
       subject: 'Collision Detection Alert',
       text: text
     };
