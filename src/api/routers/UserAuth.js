@@ -35,7 +35,7 @@ UserRouter.post("/login", async (req, res) => {
   }
 });
 
-UserRouter.get("/verifyPhOTP", async (req, res) => {
+UserRouter.post("/verifyPhOTP", async (req, res) => {
   try {
     const { mobileNumber, otp } = req.body;
     console.log(req.body);
@@ -58,6 +58,7 @@ UserRouter.get("/verifyPhOTP", async (req, res) => {
 
       return res.status(200).json({
         message: "Logged in Successfully!",
+        mobileNumber: user.mobileNumber,
         token,
       });
     } else {
