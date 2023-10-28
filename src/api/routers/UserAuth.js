@@ -21,22 +21,12 @@ UserRouter.get("/login", async (req, res) => {
       return res.status(400).json({ message: "Fill all the fields" });
     }
 
-    // Find the user by mobileNumber
-    // const user = await Users.findOne({ mobileNumber });
-    const user = true;
-    if (user) {
-      //Sending the OTP to the mobile number
-      sendOTPVerification(mobileNumber);
+    //Sending the OTP to the mobile number
+    sendOTPVerification(mobileNumber);
 
-      return res.status(200).json({
-        message: "OTP sent to the User!",
-      });
-    } else {
-      // Handle other cases (if needed)
-      return res.status(200).json({
-        message: "User not found",
-      });
-    }
+    return res.status(200).json({
+      message: "OTP sent to the User!",
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
@@ -58,18 +48,19 @@ UserRouter.get("/verifyPhOTP", async (req, res) => {
       });
 
     if (verificationCheck.status === "approved") {
-      // const user = await Users.findOne({ mobileNumber });
-      const user = true;
-
-      if (user) {
-        const token = await createJWTtoken(user);
-
-        return res.status(200).json({
-          message: "Logged in Successfully!",
-          userExists: true,
-          token,
-        });
+      const user = await Users.findOne({ mobileNumber });
+      if (!user) {
+        const newUser = new Users({ mobileNumber });
+        await newUser.save();
+        res.status(201).json(newUser);
       }
+      const token = await createJWTtoken(user);
+
+      return res.status(200).json({
+        message: "Logged in Successfully!",
+        userExists: true,
+        token,
+      });
     } else {
       res.status(400).send({ error: "Invalid OTP. Please try again." });
     }

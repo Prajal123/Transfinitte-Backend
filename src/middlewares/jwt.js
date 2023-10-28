@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 const createJWTtoken = async (user) => {
   return await jwt.sign(
     {
-      email: user.email,
+      mobileNumber: user.mobileNumber,
       id: user._id
     },
     process.env.TOKEN_SECRET,
