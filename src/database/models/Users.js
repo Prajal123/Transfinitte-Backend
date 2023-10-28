@@ -12,7 +12,7 @@ const userSchema=mongoose.Schema({
     type:String
    },
    velocity:{
-      type:number
+      type:Number
    }
 });
 

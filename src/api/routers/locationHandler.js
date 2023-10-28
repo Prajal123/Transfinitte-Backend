@@ -61,4 +61,48 @@ locationRouter.get("/getdetails", authJWT, async (req, res) => {
   }
 });
 
+
+locationRouter.get("/detectCollision", async (req, res) => {
+  try {
+  
+    const alldata = await Users.find();
+    var len=alldata.length;
+    const earthRadius = 6371;
+
+    var yellow=[],red=[],orange=[];
+    console.log(alldata);
+    for(pos1=0;pos1<len;pos1++){
+       for(pos2=pos1+1;pos2<len;pos2++){
+        // console.log(alldata[pos1].latitude);
+        const lat1Rad = (parseFloat(alldata[pos1].latitude) * Math.PI) / 180;
+        const lon1Rad = (parseFloat(alldata[pos1].longitude) * Math.PI) / 180;
+        const lat2Rad = (parseFloat(alldata[pos2].latitude)* Math.PI) / 180;
+        const lon2Rad = (parseFloat(alldata[pos2].longitude)* Math.PI) / 180;
+    
+        // Differences between the latitudes and longitudes
+        const latDiff = Math.abs(lat2Rad - lat1Rad);
+        const lonDiff = Math.abs(lon2Rad - lon1Rad);
+    
+        // Haversine formula
+        const a = Math.sin(latDiff / 2) * 2 + Math.cos(lat1Rad) * Math.cos(lat2Rad) * Math.sin(lonDiff / 2) * 2;
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    
+        // Calculate the distance
+        const distance = earthRadius * c; // Distance in kilometers
+        // console.log(pos1,pos2,distance);
+        if(distance<=1){
+          red.push({pos1MN:alldata[pos1].mobileNumber,pos2MN:alldata[pos2].mobileNumber});
+        }else if(distance<=5){
+           orange.push({pos1MN:alldata[pos1].mobileNumber,pos2MN:alldata[pos2].mobileNumber});
+        }else if(distance<=10){
+          yellow.push({pos1MN:alldata[pos1].mobileNumber,pos2MN:alldata[pos2].mobileNumber});
+        }
+       }
+    }
+    console.log(yellow,red,orange);
+    res.status(200).json(alldata);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = locationRouter;
