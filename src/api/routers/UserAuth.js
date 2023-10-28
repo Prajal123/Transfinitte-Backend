@@ -60,6 +60,7 @@ UserRouter.post("/verifyPhOTP", async (req, res) => {
         message: "Logged in Successfully!",
         mobileNumber: user.mobileNumber,
         token,
+        email:user.email
       });
     } else {
       res.status(400).send({ error: "Invalid OTP. Please try again." });

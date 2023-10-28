@@ -13,6 +13,10 @@ const userSchema=mongoose.Schema({
    },
    velocity:{
       type:Number
+   },
+   email:{
+      type:String,
+      required:true
    }
 });
 
