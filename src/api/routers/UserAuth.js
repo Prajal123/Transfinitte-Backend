@@ -13,7 +13,7 @@ const verifySid = process.env.TWILIO_VERIFY_SID;
 const client = require("twilio")(accountSid, authToken);
 
 //OTP LOGIN METHOD BEGINS
-UserRouter.get("/login", async (req, res) => {
+UserRouter.post("/login", async (req, res) => {
   try {
     const { mobileNumber } = req.body;
 
