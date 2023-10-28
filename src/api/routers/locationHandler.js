@@ -97,7 +97,7 @@ locationRouter.get("/detectCollision", authJWT,async (req, res) => {
     
         // Calculate the distance
         const distance = earthRadius * c; // Distance in kilometers
-         
+         console.log(distance);
         if(distance<=1)red++;
         else if(distance<=5)orange++;
         else if(distance<=10)yellow++;
@@ -105,30 +105,28 @@ locationRouter.get("/detectCollision", authJWT,async (req, res) => {
     }
     var text="";
 
-    if(red){
-      text="You are in red zone, please stop vehicle";
-     res.send(200).json("You are in red zone, please stop vehicle");
-    }else if(orange){
-      text="You are in orange zone, please go slow";
-      res.send(200).json("You are in orange zone, please go slow");
-    }else if(yellow){
-      text="You are in yellow zone, move carefully";
-      res.send(200).json("You are in yellow zone, move carefully");
-    }else{
-      text="You are fine";
-      res.send(200).json("You are fine");
+    if (red) {
+      text = "You are in red zone, please stop the vehicle";
+    } else if (orange) {
+      text = "You are in the orange zone, please go slow";
+    } else if (yellow) {
+      text = "You are in the yellow zone, move carefully";
+    } else {
+      text = "You are fine";
     }
+
+    res.status(200).json({ message: text });
 
     var transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'singhalprajal@gmail.com',
-        pass: 'Prajal@123'
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
       }
     });
     
     var mailOptions = {
-      from: 'singhalprajal@gmail.com',
+      from: process.env.EMAIL ,
       to: 'singhalprajalkumar@gmail.com',
       subject: 'Collision Detection Alert',
       text: text
