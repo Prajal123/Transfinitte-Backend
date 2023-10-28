@@ -54,7 +54,8 @@ locationRouter.get("/getdetails", authJWT, async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    res.status(200).json(user);
+    const alldata = await Users.find();
+    res.status(200).json(alldata);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
