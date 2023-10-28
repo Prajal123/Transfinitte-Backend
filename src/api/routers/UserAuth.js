@@ -58,7 +58,6 @@ UserRouter.get("/verifyPhOTP", async (req, res) => {
 
       return res.status(200).json({
         message: "Logged in Successfully!",
-        userExists: true,
         token,
       });
     } else {
