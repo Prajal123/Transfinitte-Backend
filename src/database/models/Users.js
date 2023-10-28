@@ -6,12 +6,10 @@ const userSchema=mongoose.Schema({
     required:'true'
    },
    latitude:{
-    type:String,
-    required:true
+    type:String
    },
    longitude:{
-    type:String,
-    required:true
+    type:String
    }
 });
 
