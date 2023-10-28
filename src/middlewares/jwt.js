@@ -14,8 +14,9 @@ const createJWTtoken = async (user) => {
 
 var authJWT = (req,res,next)=>{
   var token = req.headers.authorization;
+  // console.log(token);
   token = token.split(' ')[1];
-
+   
   jwt.verify(token, process.env.TOKEN_SECRET, function(err,decoded) {
     req.jwt_payload = decoded;
     if(err){

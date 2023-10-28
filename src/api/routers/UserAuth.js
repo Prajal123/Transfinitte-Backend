@@ -15,7 +15,7 @@ const client = require("twilio")(accountSid, authToken);
 //OTP LOGIN METHOD BEGINS
 UserRouter.post("/login", async (req, res) => {
   try {
-    const { mobileNumber } = req.body;
+    const { mobileNumber, email } = req.body;
 
     if (!mobileNumber) {
       return res.status(400).json({ message: "Fill all the fields" });
@@ -37,7 +37,7 @@ UserRouter.post("/login", async (req, res) => {
 
 UserRouter.post("/verifyPhOTP", async (req, res) => {
   try {
-    const { mobileNumber, otp } = req.body;
+    const { mobileNumber, otp, email } = req.body;
     console.log(req.body);
 
     const verificationCheck = await client.verify.v2
@@ -50,18 +50,26 @@ UserRouter.post("/verifyPhOTP", async (req, res) => {
     if (verificationCheck.status === "approved") {
       const user = await Users.findOne({ mobileNumber });
       if (!user) {
-        const newUser = new Users({ mobileNumber });
+        const newUser = new Users({ mobileNumber, email });
         await newUser.save();
-        res.status(201).json(newUser);
-      }
-      const token = await createJWTtoken(user);
+        const token = await createJWTtoken(newUser);
 
-      return res.status(200).json({
-        message: "Logged in Successfully!",
-        mobileNumber: user.mobileNumber,
-        token,
-        email:user.email
-      });
+        return res.status(200).json({
+          message: "Logged in Successfully!",
+          mobileNumber: newUser.mobileNumber,
+          token,
+          email: newUser.email
+        });
+      } else {
+        const token = await createJWTtoken(user);
+
+        return res.status(200).json({
+          message: "Logged in Successfully!",
+          mobileNumber: user.mobileNumber,
+          token,
+          email: user.email
+        });
+      }
     } else {
       res.status(400).send({ error: "Invalid OTP. Please try again." });
     }
