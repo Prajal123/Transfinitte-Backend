@@ -10,6 +10,9 @@ const userSchema=mongoose.Schema({
    },
    longitude:{
     type:String
+   },
+   velocity:{
+      type:number
    }
 });
 
