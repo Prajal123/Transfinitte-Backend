@@ -20,7 +20,6 @@ $ yarn # or npm i
 
 ## project structure
 ```terminal
-<pre>
 src
 │
 ├── api
@@ -40,7 +39,6 @@ src
 │
 └── middlewares
     └── jwt.js
-</pre>
 ```
 
 
